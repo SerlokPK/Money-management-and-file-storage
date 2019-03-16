@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace ImageStore.Helpers
+namespace Common.Helpers
 {
     public class CommandHelper : ICommand
     {

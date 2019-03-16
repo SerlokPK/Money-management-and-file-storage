@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace ImageStore.Helpers
+namespace Common.Helpers
 {
     public class BaseModel : INotifyPropertyChanged
     {

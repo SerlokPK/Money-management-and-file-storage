@@ -3,10 +3,20 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:Money_and_data_management.ViewModel"
+        xmlns:views="clr-namespace:Money_and_data_management.View"
         xmlns:local="clr-namespace:Money_and_data_management"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Money_management" Height="1000" Width="1800">
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type viewModels:LoginViewModel}">
+            <views:LoginView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:RegisterViewModel}">
+            <views:RegisterView />
+        </DataTemplate>
+    </Window.Resources>
     <Grid>
-        
+        <ContentControl Content="{Binding CurrentViewModel}" />
     </Grid>
 </Window>

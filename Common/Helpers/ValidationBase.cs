@@ -1,4 +1,4 @@
-﻿namespace ImageStore.Helpers
+﻿namespace Common.Helpers
 {
     public abstract class ValidationBase : BaseModel
     {

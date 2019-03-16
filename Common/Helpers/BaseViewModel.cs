@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace ImageStore.Helpers
+namespace Common.Helpers
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
