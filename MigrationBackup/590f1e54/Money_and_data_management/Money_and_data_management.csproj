@@ -35,6 +35,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
@@ -66,56 +72,15 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DataBase\Admin.cs">
-      <DependentUpon>MoneyManagement.tt</DependentUpon>
-    </Compile>
-    <Compile Include="DataBase\Bill.cs">
-      <DependentUpon>MoneyManagement.tt</DependentUpon>
-    </Compile>
-    <Compile Include="DataBase\Card.cs">
-      <DependentUpon>MoneyManagement.tt</DependentUpon>
-    </Compile>
-    <Compile Include="DataBase\File.cs">
-      <DependentUpon>MoneyManagement.tt</DependentUpon>
-    </Compile>
-    <Compile Include="DataBase\Folder.cs">
-      <DependentUpon>MoneyManagement.tt</DependentUpon>
-    </Compile>
-    <Compile Include="DataBase\Has.cs">
-      <DependentUpon>MoneyManagement.tt</DependentUpon>
-    </Compile>
-    <Compile Include="DataBase\Money.cs">
-      <DependentUpon>MoneyManagement.tt</DependentUpon>
-    </Compile>
     <Compile Include="DataBase\MoneyManagement.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>MoneyManagement.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="DataBase\MoneyManagement.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MoneyManagement.tt</DependentUpon>
-    </Compile>
     <Compile Include="DataBase\MoneyManagement.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>MoneyManagement.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="DataBase\Regular.cs">
-      <DependentUpon>MoneyManagement.tt</DependentUpon>
-    </Compile>
-    <Compile Include="DataBase\User.cs">
-      <DependentUpon>MoneyManagement.tt</DependentUpon>
-    </Compile>
-    <Compile Include="DataBase\Valute.cs">
-      <DependentUpon>MoneyManagement.tt</DependentUpon>
-    </Compile>
-    <Compile Include="DataBase\Wallet.cs">
-      <DependentUpon>MoneyManagement.tt</DependentUpon>
-    </Compile>
-    <Compile Include="DataBase\Workstation.cs">
-      <DependentUpon>MoneyManagement.tt</DependentUpon>
     </Compile>
     <Compile Include="Helpers\BaseModel.cs" />
     <Compile Include="Helpers\BaseViewModel.cs" />
@@ -152,6 +117,7 @@
     <None Include="DataBase\MoneyManagement.edmx.diagram">
       <DependentUpon>MoneyManagement.edmx</DependentUpon>
     </None>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -161,25 +127,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="EntityFramework">
-      <Version>6.2.0</Version>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
     <Content Include="DataBase\MoneyManagement.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>MoneyManagement.edmx</DependentUpon>
       <LastGenOutput>MoneyManagement.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="DataBase\MoneyManagement.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>MoneyManagement.edmx</DependentUpon>
-      <LastGenOutput>MoneyManagement.cs</LastGenOutput>
-    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
