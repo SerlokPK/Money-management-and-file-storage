@@ -103,7 +103,7 @@ namespace Models.User
                 {
                     this.ValidationErrors["Email"] = "Email format isn't valid.";
                 }
-                if (!this.password.Equals(this.confirmPassword))
+                if ((string.IsNullOrEmpty(this.password) && string.IsNullOrEmpty(this.confirmPassword)) || !this.password.Equals(this.confirmPassword))
                 {
                     this.ValidationErrors["ConfirmPassword"] = "Confirm password need to be same as password";
                 }
