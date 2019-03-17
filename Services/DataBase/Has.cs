@@ -7,18 +7,20 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Money_and_data_management.DataBase
+namespace Services.DataBase
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class Card
+    public partial class Has
     {
-        public int CardId { get; set; }
-        public Nullable<decimal> Amount { get; set; }
-        public string Type { get; set; }
-        public Nullable<int> Wallet_WalletId { get; set; }
+        public Nullable<System.DateTime> PaymentDate { get; set; }
+        public int Money_MoneyId { get; set; }
+        public int Wallet_WalletId { get; set; }
+        public int Bill_BillId { get; set; }
+        public decimal Has_ID { get; set; }
     
+        public virtual Bill Bill { get; set; }
         public virtual Wallet Wallet { get; set; }
     }
 }

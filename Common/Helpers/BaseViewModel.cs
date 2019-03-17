@@ -11,16 +11,6 @@ namespace Common.Helpers
 
         }
 
-        //public UserModel User
-        //{
-        //    get { return m_User; }
-        //    set
-        //    {
-        //        m_User = value;
-        //        OnPropertyChanged("User");
-        //    }
-        //}
-
         #region PropertyChanged
 
         public event PropertyChangedEventHandler PropertyChanged = delegate { };

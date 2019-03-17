@@ -7,26 +7,27 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Money_and_data_management.DataBase
+namespace Services.DataBase
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class User
+    public partial class Workstation
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public User()
+        public Workstation()
         {
+            this.Folders = new HashSet<Folder>();
             this.Admins = new HashSet<Admin>();
         }
     
-        public int UserId { get; set; }
-        public string Email { get; set; }
+        public int WorkstationId { get; set; }
         public string Name { get; set; }
-        public string Lastname { get; set; }
-        public string Password { get; set; }
+        public Nullable<System.DateTime> CreationDate { get; set; }
+        public int Regular_UserId { get; set; }
     
-        public virtual Admin Admin { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Folder> Folders { get; set; }
         public virtual Regular Regular { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Admin> Admins { get; set; }

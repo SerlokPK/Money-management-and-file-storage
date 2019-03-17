@@ -7,25 +7,28 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Money_and_data_management.DataBase
+namespace Services.DataBase
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class Valute
+    public partial class User
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Valute()
+        public User()
         {
-            this.Wallets = new HashSet<Wallet>();
+            this.Admins = new HashSet<Admin>();
         }
     
-        public int ValuteId { get; set; }
+        public int UserId { get; set; }
+        public string Email { get; set; }
         public string Name { get; set; }
-        public int Admin_UserId { get; set; }
+        public string Lastname { get; set; }
+        public string Password { get; set; }
     
         public virtual Admin Admin { get; set; }
+        public virtual Regular Regular { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Wallet> Wallets { get; set; }
+        public virtual ICollection<Admin> Admins { get; set; }
     }
 }

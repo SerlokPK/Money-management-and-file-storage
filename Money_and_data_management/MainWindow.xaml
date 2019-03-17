@@ -7,7 +7,7 @@
         xmlns:views="clr-namespace:Money_and_data_management.View"
         xmlns:local="clr-namespace:Money_and_data_management"
         mc:Ignorable="d"
-        Title="Money_management" Height="1000" Width="1800">
+        Title="Money_management" Height="800" Width="1600">
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewModels:LoginViewModel}">
             <views:LoginView />

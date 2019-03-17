@@ -7,28 +7,26 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Money_and_data_management.DataBase
+namespace Services.DataBase
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class File
+    public partial class Folder
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public File()
+        public Folder()
         {
-            this.Bills = new HashSet<Bill>();
+            this.Files = new HashSet<File>();
         }
     
-        public int FileId { get; set; }
+        public int FolderId { get; set; }
         public string Name { get; set; }
-        public string UrlName { get; set; }
-        public string Description { get; set; }
         public Nullable<System.DateTime> CreationDate { get; set; }
-        public int Folder_FolderId { get; set; }
+        public int Workstation_WorkstationId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Bill> Bills { get; set; }
-        public virtual Folder Folder { get; set; }
+        public virtual ICollection<File> Files { get; set; }
+        public virtual Workstation Workstation { get; set; }
     }
 }

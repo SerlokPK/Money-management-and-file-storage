@@ -5,8 +5,45 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Money_and_data_management.View"
              mc:Ignorable="d" 
-             Height="1000" Width="1800">
+             Height="800" Width="1600">
     <Grid>
-        <Label x:Name="Register_Label" Content="Don't have an account?" HorizontalAlignment="Left" Margin="1245,597,0,0" VerticalAlignment="Top" FontSize="48"/>
+        <Label x:Name="Register_Label" Content="Create account" HorizontalAlignment="Left" Margin="614,10,0,0" VerticalAlignment="Top" FontSize="48" FontWeight="Bold"/>
+        <Label x:Name="Email_label" Content="Email" HorizontalAlignment="Left" Margin="714,134,0,0" VerticalAlignment="Top" FontSize="36"/>
+        <TextBox x:Name="Email_textBox" 
+                 Text="{Binding User.Email, Mode=TwoWay}"
+                 HorizontalAlignment="Left" Height="52" Margin="614,196,0,0"  VerticalContentAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Top" Width="332" FontSize="24"/>
+        <TextBlock Text="{Binding User.ValidationErrors[Email]}"
+                   Foreground="Red" HorizontalAlignment="Left" Margin="614,252,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="332" Height="32"/>
+        <Label x:Name="Firstname_label" Content="Firstname" HorizontalAlignment="Left" Margin="212,286,0,0" VerticalAlignment="Top" FontSize="36"/>
+        <TextBox x:Name="Firstname_textBox" 
+                 Text="{Binding User.FirstName, Mode=TwoWay}"
+            HorizontalAlignment="Left" Height="50" Margin="130,344,0,0"  VerticalContentAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Top" Width="332" FontSize="24"/>
+        <TextBlock Text="{Binding User.ValidationErrors[FirstName]}"
+            Foreground="Red" HorizontalAlignment="Left" Margin="130,400,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="332" Height="32"/>
+        <Label x:Name="Lastname_label" Content="Lastname" HorizontalAlignment="Left" Margin="216,444,0,0" VerticalAlignment="Top" FontSize="36"/>
+        <TextBox x:Name="Lastname_textBox" 
+                 Text="{Binding User.LastName, Mode=TwoWay}"
+            HorizontalAlignment="Left" Height="52" Margin="130,506,0,0"  VerticalContentAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Top" Width="332" FontSize="24"/>
+        <TextBlock Text="{Binding User.ValidationErrors[LastName]}"
+            Foreground="Red" HorizontalAlignment="Left" Margin="130,562,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="332" Height="32"/>
+        <Label x:Name="Password_label" Content="Password" HorizontalAlignment="Left" Margin="1180,282,0,0" VerticalAlignment="Top" FontSize="36"/>
+        <TextBox x:Name="Password_textBox" 
+                 Text="{Binding User.Password, Mode=TwoWay}"
+            HorizontalAlignment="Left" Height="50" Margin="1098,345,0,0"  VerticalContentAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Top" Width="332" FontSize="24"/>
+        <TextBlock Text="{Binding User.ValidationErrors[Password]}"
+            Foreground="Red" HorizontalAlignment="Left" Margin="1098,400,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="332" Height="32"/>
+        <Label x:Name="ConfPassword_label" Content="Confirm password" HorizontalAlignment="Left" Margin="1118,437,0,0" VerticalAlignment="Top" FontSize="36"/>
+        <TextBox x:Name="ConfPassword_textBox" 
+                 Text="{Binding User.ConfirmPassword, Mode=TwoWay}"
+            HorizontalAlignment="Left" Height="50" Margin="1098,507,0,0"  VerticalContentAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Top" Width="332" FontSize="24"/>
+        <TextBlock Text="{Binding User.ValidationErrors[ConfirmPassword]}"
+            Foreground="Red" HorizontalAlignment="Left" Margin="1098,562,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="332" Height="32"/>
+        <Button Content="Register" 
+                Command="{Binding RegisterCommand}" 
+                HorizontalAlignment="Left" Margin="619,644,0,0" VerticalAlignment="Top" Width="332" FontSize="48" Height="102" Background="#FFD6319A"/>
+        <Button Content="Log in" 
+            Command="{Binding LogInCommand}" 
+            HorizontalAlignment="Left" Margin="619,450,0,0" VerticalAlignment="Top" Width="332" FontSize="48" Height="102" Background="#FF1986E0"/>
+        <Label x:Name="LogInLabel" Content="Back to login" HorizontalAlignment="Left" Margin="681,374,0,0" VerticalAlignment="Top" FontSize="36"/>
     </Grid>
 </UserControl>

@@ -1,5 +1,6 @@
 ﻿using Services.Interface;
 using Services.Page;
+using Services.User;
 
 namespace Services
 {
@@ -9,11 +10,12 @@ namespace Services
         private static readonly object padlock = new object();
 
         public IPageService PageService { get; private set; }
-        //public IUserService UserService { get; private set; }
+        public IUserService UserService { get; private set; }
 
         private SimpleDI()
         {
             PageService = new PageService();
+            UserService = new UserService();
         }
 
         public static SimpleDI Instance

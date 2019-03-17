@@ -1,4 +1,6 @@
-﻿namespace Common.Helpers
+﻿using Common.Enums;
+
+namespace Common.Helpers
 {
     public abstract class ValidationBase : BaseModel
     {
@@ -10,14 +12,19 @@
             this.ValidationErrors = new ValidationErrors();
         }
 
-        protected abstract void ValidateSelf(string type);
+        protected abstract void ValidateSelf(EPages type);
 
-        public void Validate(string type)
+        public void Validate(EPages type)
         {
             this.ValidationErrors.Clear();
             this.ValidateSelf(type);
             this.IsValid = this.ValidationErrors.IsValid;
             this.OnPropertyChanged("IsValid");
+            this.OnPropertyChanged("ValidationErrors");
+        }
+
+        public void ValidationPropertyChange()
+        {
             this.OnPropertyChanged("ValidationErrors");
         }
     }

@@ -7,30 +7,29 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Money_and_data_management.DataBase
+namespace Services.DataBase
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class Wallet
+    public partial class Admin
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Wallet()
+        public Admin()
         {
-            this.Cards = new HashSet<Card>();
-            this.Hass = new HashSet<Has>();
+            this.Valutes = new HashSet<Valute>();
+            this.Workstations = new HashSet<Workstation>();
+            this.Users = new HashSet<User>();
         }
     
-        public int WalletId { get; set; }
-        public string Name { get; set; }
-        public int Regular_UserId { get; set; }
-        public int Valute_ValuteId { get; set; }
+        public int UserId { get; set; }
     
+        public virtual User User { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Card> Cards { get; set; }
+        public virtual ICollection<Valute> Valutes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Has> Hass { get; set; }
-        public virtual Regular Regular { get; set; }
-        public virtual Valute Valute { get; set; }
+        public virtual ICollection<Workstation> Workstations { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<User> Users { get; set; }
     }
 }
