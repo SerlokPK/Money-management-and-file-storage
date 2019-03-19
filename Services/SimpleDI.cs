@@ -1,6 +1,7 @@
 ﻿using Services.Interface;
 using Services.Page;
 using Services.User;
+using Services.Workstation;
 
 namespace Services
 {
@@ -11,11 +12,13 @@ namespace Services
 
         public IPageService PageService { get; private set; }
         public IUserService UserService { get; private set; }
+        public IWorkstationService WorkstationService { get; set; }
 
         private SimpleDI()
         {
             PageService = new PageService();
             UserService = new UserService();
+            WorkstationService = new WorstationService();
         }
 
         public static SimpleDI Instance

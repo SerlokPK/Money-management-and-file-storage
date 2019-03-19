@@ -17,17 +17,17 @@ namespace Services.DataBase
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Workstation()
         {
-            this.Folders = new HashSet<Folder>();
+            this.Files = new HashSet<File>();
             this.Admins = new HashSet<Admin>();
         }
     
         public int WorkstationId { get; set; }
         public string Name { get; set; }
-        public Nullable<System.DateTime> CreationDate { get; set; }
+        public System.DateTime CreationDate { get; set; }
         public int Regular_UserId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Folder> Folders { get; set; }
+        public virtual ICollection<File> Files { get; set; }
         public virtual Regular Regular { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Admin> Admins { get; set; }

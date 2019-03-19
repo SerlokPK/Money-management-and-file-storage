@@ -81,7 +81,7 @@ namespace Models.User
 
         protected override void ValidateSelf(EPages type)
         {
-            if (string.IsNullOrEmpty(this.email) || !Regex.IsMatch(this.email, "^.{1,50}$"))
+            if (type != EPages.ACC && (string.IsNullOrEmpty(this.email) || !Regex.IsMatch(this.email, "^.{1,50}$")))
             {
                 this.ValidationErrors["Email"] = "Email can be between 1 and 50 characters.";
             }
@@ -89,7 +89,7 @@ namespace Models.User
             {
                 this.ValidationErrors["Password"] = "Password can be between 1 and 50 characters.";
             }
-            if (type.Equals(EPages.REG))
+            if (type.Equals(EPages.REG) || type.Equals(EPages.ACC))
             {
                 if (string.IsNullOrEmpty(this.firstName) || !Regex.IsMatch(this.firstName, "^.{1,50}$"))
                 {
@@ -99,7 +99,7 @@ namespace Models.User
                 {
                     this.ValidationErrors["LastName"] = "Last name can be between 1 and 50 characters.";
                 }
-                if (string.IsNullOrEmpty(this.email) || !Regex.IsMatch(this.email, @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z"))
+                if (type != EPages.ACC && (string.IsNullOrEmpty(this.email) || !Regex.IsMatch(this.email, @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z")))
                 {
                     this.ValidationErrors["Email"] = "Email format isn't valid.";
                 }

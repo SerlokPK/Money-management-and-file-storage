@@ -10,5 +10,7 @@ namespace Common.Enums
     {
         LOG = 1,
         REG = 2,
+        WORKSTATION = 3,
+        ACC = 4,
     }
 }

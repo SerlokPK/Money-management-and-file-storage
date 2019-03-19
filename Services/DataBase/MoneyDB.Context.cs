@@ -13,10 +13,10 @@ namespace Services.DataBase
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class MoneyManagementEntities : DbContext
+    public partial class MoneyDBEntities : DbContext
     {
-        public MoneyManagementEntities()
-            : base("name=MoneyManagementEntities")
+        public MoneyDBEntities()
+            : base("name=MoneyDBEntities")
         {
         }
     
@@ -29,9 +29,7 @@ namespace Services.DataBase
         public virtual DbSet<Bill> Bills { get; set; }
         public virtual DbSet<Card> Cards { get; set; }
         public virtual DbSet<File> Files { get; set; }
-        public virtual DbSet<Folder> Folders { get; set; }
-        public virtual DbSet<Has> Hass { get; set; }
-        public virtual DbSet<Money> Moneys { get; set; }
+        public virtual DbSet<FileType> FileTypes { get; set; }
         public virtual DbSet<Regular> Regulars { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Valute> Valutes { get; set; }

@@ -14,19 +14,13 @@ namespace Services.DataBase
     
     public partial class Bill
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Bill()
-        {
-            this.Hass = new HashSet<Has>();
-        }
-    
         public int BillId { get; set; }
         public string ValuteName { get; set; }
         public Nullable<decimal> Amount { get; set; }
         public int File_FileId { get; set; }
+        public int Wallet_WalletId { get; set; }
     
         public virtual File File { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Has> Hass { get; set; }
+        public virtual Wallet Wallet { get; set; }
     }
 }

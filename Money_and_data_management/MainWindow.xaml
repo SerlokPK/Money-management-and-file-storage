@@ -15,6 +15,12 @@
         <DataTemplate DataType="{x:Type viewModels:RegisterViewModel}">
             <views:RegisterView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:WorkstationViewModel}">
+            <views:WorkstationView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:AccountViewModel}">
+            <views:AccountView />
+        </DataTemplate>
     </Window.Resources>
     <Grid>
         <ContentControl Content="{Binding CurrentViewModel}" />

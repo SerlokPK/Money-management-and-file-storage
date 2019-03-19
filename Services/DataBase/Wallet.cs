@@ -17,8 +17,8 @@ namespace Services.DataBase
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Wallet()
         {
+            this.Bills = new HashSet<Bill>();
             this.Cards = new HashSet<Card>();
-            this.Hass = new HashSet<Has>();
         }
     
         public int WalletId { get; set; }
@@ -27,9 +27,9 @@ namespace Services.DataBase
         public int Valute_ValuteId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Card> Cards { get; set; }
+        public virtual ICollection<Bill> Bills { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Has> Hass { get; set; }
+        public virtual ICollection<Card> Cards { get; set; }
         public virtual Regular Regular { get; set; }
         public virtual Valute Valute { get; set; }
     }

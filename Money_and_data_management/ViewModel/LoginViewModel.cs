@@ -39,7 +39,7 @@ namespace Money_and_data_management.ViewModel
             User.Validate(EPages.LOG);
             if (User.IsValid && userService.ValidateLogInUser(User.Email,User.Password))
             {
-                //pageService.ChangePage(EPages.REG); idi na glavni meni
+                pageService.ChangePage(EPages.WORKSTATION);
             }
             else
             {

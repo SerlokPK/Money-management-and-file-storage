@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="MoneyManagementModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="MoneyDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Admin">
           <Key>
             <PropertyRef Name="UserId" />
@@ -27,6 +27,7 @@
           <Property Name="ValuteName" Type="varchar" MaxLength="50" />
           <Property Name="Amount" Type="money" />
           <Property Name="File_FileId" Type="int" Nullable="false" />
+          <Property Name="Wallet_WalletId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Card">
           <Key>
@@ -34,7 +35,7 @@
           </Key>
           <Property Name="CardId" Type="int" Nullable="false" />
           <Property Name="Amount" Type="money" />
-          <Property Name="Type" Type="varchar" MaxLength="50" />
+          <Property Name="Type" Type="varchar" MaxLength="1" />
           <Property Name="Wallet_WalletId" Type="int" />
         </EntityType>
         <EntityType Name="File">
@@ -47,33 +48,14 @@
           <Property Name="Description" Type="varchar" MaxLength="2000" />
           <Property Name="CreationDate" Type="date" />
           <Property Name="Folder_FolderId" Type="int" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Folder">
-          <Key>
-            <PropertyRef Name="FolderId" />
-          </Key>
-          <Property Name="FolderId" Type="int" Nullable="false" />
-          <Property Name="Name" Type="varchar" MaxLength="50" />
-          <Property Name="CreationDate" Type="date" />
           <Property Name="Workstation_WorkstationId" Type="int" Nullable="false" />
+          <Property Name="FileType_TypeId" Type="int" Nullable="false" />
         </EntityType>
-        <EntityType Name="Has">
+        <EntityType Name="FileType">
           <Key>
-            <PropertyRef Name="Has_ID" />
+            <PropertyRef Name="TypeId" />
           </Key>
-          <Property Name="PaymentDate" Type="date" />
-          <Property Name="Money_MoneyId" Type="int" Nullable="false" />
-          <Property Name="Wallet_WalletId" Type="int" Nullable="false" />
-          <Property Name="Bill_BillId" Type="int" Nullable="false" />
-          <Property Name="Has_ID" Type="numeric" Precision="28" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Money">
-          <Key>
-            <PropertyRef Name="MoneyId" />
-          </Key>
-          <Property Name="MoneyId" Type="int" Nullable="false" />
-          <Property Name="Amount" Type="money" />
-          <Property Name="Has_Has_ID" Type="numeric" Precision="28" Scale="0" Nullable="false" />
+          <Property Name="TypeId" Type="int" Nullable="false" />
           <Property Name="Name" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="operates">
@@ -122,8 +104,8 @@
             <PropertyRef Name="WorkstationId" />
           </Key>
           <Property Name="WorkstationId" Type="int" Nullable="false" />
-          <Property Name="Name" Type="varchar" MaxLength="50" />
-          <Property Name="CreationDate" Type="date" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="CreationDate" Type="date" Nullable="false" />
           <Property Name="Regular_UserId" Type="int" Nullable="false" />
         </EntityType>
         <Association Name="Admin_User_FK">
@@ -150,6 +132,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="Bill_Wallet_FK">
+          <End Role="Wallet" Type="Self.Wallet" Multiplicity="1" />
+          <End Role="Bill" Type="Self.Bill" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Wallet">
+              <PropertyRef Name="WalletId" />
+            </Principal>
+            <Dependent Role="Bill">
+              <PropertyRef Name="Wallet_WalletId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="Card_Wallet_FK">
           <End Role="Wallet" Type="Self.Wallet" Multiplicity="0..1" />
           <End Role="Card" Type="Self.Card" Multiplicity="*" />
@@ -162,15 +156,27 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="File_Folder_FK">
-          <End Role="Folder" Type="Self.Folder" Multiplicity="1" />
+        <Association Name="File_FileType_FK">
+          <End Role="FileType" Type="Self.FileType" Multiplicity="1" />
           <End Role="File" Type="Self.File" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Folder">
-              <PropertyRef Name="FolderId" />
+            <Principal Role="FileType">
+              <PropertyRef Name="TypeId" />
             </Principal>
             <Dependent Role="File">
-              <PropertyRef Name="Folder_FolderId" />
+              <PropertyRef Name="FileType_TypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="File_Workstation_FK">
+          <End Role="Workstation" Type="Self.Workstation" Multiplicity="1" />
+          <End Role="File" Type="Self.File" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Workstation">
+              <PropertyRef Name="WorkstationId" />
+            </Principal>
+            <Dependent Role="File">
+              <PropertyRef Name="Workstation_WorkstationId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -219,42 +225,6 @@
             </Principal>
             <Dependent Role="administrate">
               <PropertyRef Name="Workstation_WorkstationId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="Folder_Workstation_FK">
-          <End Role="Workstation" Type="Self.Workstation" Multiplicity="1" />
-          <End Role="Folder" Type="Self.Folder" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Workstation">
-              <PropertyRef Name="WorkstationId" />
-            </Principal>
-            <Dependent Role="Folder">
-              <PropertyRef Name="Workstation_WorkstationId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="Has_Bill_FK">
-          <End Role="Bill" Type="Self.Bill" Multiplicity="1" />
-          <End Role="Has" Type="Self.Has" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Bill">
-              <PropertyRef Name="BillId" />
-            </Principal>
-            <Dependent Role="Has">
-              <PropertyRef Name="Bill_BillId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="Has_Wallet_FK">
-          <End Role="Wallet" Type="Self.Wallet" Multiplicity="1" />
-          <End Role="Has" Type="Self.Has" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Wallet">
-              <PropertyRef Name="WalletId" />
-            </Principal>
-            <Dependent Role="Has">
-              <PropertyRef Name="Wallet_WalletId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -318,15 +288,13 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="MoneyManagementModelStoreContainer">
+        <EntityContainer Name="MoneyDBModelStoreContainer">
           <EntitySet Name="Admin" EntityType="Self.Admin" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="administrate" EntityType="Self.administrate" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Bill" EntityType="Self.Bill" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Card" EntityType="Self.Card" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="File" EntityType="Self.File" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Folder" EntityType="Self.Folder" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Has" EntityType="Self.Has" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Money" EntityType="Self.Money" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FileType" EntityType="Self.FileType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="operates" EntityType="Self.operates" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Regular" EntityType="Self.Regular" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
@@ -341,12 +309,20 @@
             <End Role="File" EntitySet="File" />
             <End Role="Bill" EntitySet="Bill" />
           </AssociationSet>
+          <AssociationSet Name="Bill_Wallet_FK" Association="Self.Bill_Wallet_FK">
+            <End Role="Wallet" EntitySet="Wallet" />
+            <End Role="Bill" EntitySet="Bill" />
+          </AssociationSet>
           <AssociationSet Name="Card_Wallet_FK" Association="Self.Card_Wallet_FK">
             <End Role="Wallet" EntitySet="Wallet" />
             <End Role="Card" EntitySet="Card" />
           </AssociationSet>
-          <AssociationSet Name="File_Folder_FK" Association="Self.File_Folder_FK">
-            <End Role="Folder" EntitySet="Folder" />
+          <AssociationSet Name="File_FileType_FK" Association="Self.File_FileType_FK">
+            <End Role="FileType" EntitySet="FileType" />
+            <End Role="File" EntitySet="File" />
+          </AssociationSet>
+          <AssociationSet Name="File_Workstation_FK" Association="Self.File_Workstation_FK">
+            <End Role="Workstation" EntitySet="Workstation" />
             <End Role="File" EntitySet="File" />
           </AssociationSet>
           <AssociationSet Name="FK_ASS_16" Association="Self.FK_ASS_16">
@@ -364,18 +340,6 @@
           <AssociationSet Name="FK_ASS_4" Association="Self.FK_ASS_4">
             <End Role="Workstation" EntitySet="Workstation" />
             <End Role="administrate" EntitySet="administrate" />
-          </AssociationSet>
-          <AssociationSet Name="Folder_Workstation_FK" Association="Self.Folder_Workstation_FK">
-            <End Role="Workstation" EntitySet="Workstation" />
-            <End Role="Folder" EntitySet="Folder" />
-          </AssociationSet>
-          <AssociationSet Name="Has_Bill_FK" Association="Self.Has_Bill_FK">
-            <End Role="Bill" EntitySet="Bill" />
-            <End Role="Has" EntitySet="Has" />
-          </AssociationSet>
-          <AssociationSet Name="Has_Wallet_FK" Association="Self.Has_Wallet_FK">
-            <End Role="Wallet" EntitySet="Wallet" />
-            <End Role="Has" EntitySet="Has" />
           </AssociationSet>
           <AssociationSet Name="Regular_User_FK" Association="Self.Regular_User_FK">
             <End Role="User" EntitySet="User" />
@@ -398,11 +362,10 @@
             <End Role="Workstation" EntitySet="Workstation" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="MoneyManagementModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="MoneyDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="Admin">
           <Key>
             <PropertyRef Name="UserId" />
@@ -421,8 +384,9 @@
           <Property Name="ValuteName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Amount" Type="Decimal" Precision="19" Scale="4" />
           <Property Name="File_FileId" Type="Int32" Nullable="false" />
+          <Property Name="Wallet_WalletId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="File" Relationship="Self.Bill_File_FK" FromRole="Bill" ToRole="File" />
-          <NavigationProperty Name="Hass" Relationship="Self.Has_Bill_FK" FromRole="Bill" ToRole="Has" />
+          <NavigationProperty Name="Wallet" Relationship="Self.Bill_Wallet_FK" FromRole="Bill" ToRole="Wallet" />
         </EntityType>
         <EntityType Name="Card">
           <Key>
@@ -430,7 +394,7 @@
           </Key>
           <Property Name="CardId" Type="Int32" Nullable="false" />
           <Property Name="Amount" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Type" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
           <Property Name="Wallet_WalletId" Type="Int32" />
           <NavigationProperty Name="Wallet" Relationship="Self.Card_Wallet_FK" FromRole="Card" ToRole="Wallet" />
         </EntityType>
@@ -444,40 +408,19 @@
           <Property Name="Description" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
           <Property Name="CreationDate" Type="DateTime" Precision="0" />
           <Property Name="Folder_FolderId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Bills" Relationship="Self.Bill_File_FK" FromRole="File" ToRole="Bill" />
-          <NavigationProperty Name="Folder" Relationship="Self.File_Folder_FK" FromRole="File" ToRole="Folder" />
-        </EntityType>
-        <EntityType Name="Folder">
-          <Key>
-            <PropertyRef Name="FolderId" />
-          </Key>
-          <Property Name="FolderId" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="CreationDate" Type="DateTime" Precision="0" />
           <Property Name="Workstation_WorkstationId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Files" Relationship="Self.File_Folder_FK" FromRole="Folder" ToRole="File" />
-          <NavigationProperty Name="Workstation" Relationship="Self.Folder_Workstation_FK" FromRole="Folder" ToRole="Workstation" />
+          <Property Name="FileType_TypeId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Bills" Relationship="Self.Bill_File_FK" FromRole="File" ToRole="Bill" />
+          <NavigationProperty Name="FileType" Relationship="Self.File_FileType_FK" FromRole="File" ToRole="FileType" />
+          <NavigationProperty Name="Workstation" Relationship="Self.File_Workstation_FK" FromRole="File" ToRole="Workstation" />
         </EntityType>
-        <EntityType Name="Has">
+        <EntityType Name="FileType">
           <Key>
-            <PropertyRef Name="Has_ID" />
+            <PropertyRef Name="TypeId" />
           </Key>
-          <Property Name="PaymentDate" Type="DateTime" Precision="0" />
-          <Property Name="Money_MoneyId" Type="Int32" Nullable="false" />
-          <Property Name="Wallet_WalletId" Type="Int32" Nullable="false" />
-          <Property Name="Bill_BillId" Type="Int32" Nullable="false" />
-          <Property Name="Has_ID" Type="Decimal" Precision="28" Scale="0" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <NavigationProperty Name="Bill" Relationship="Self.Has_Bill_FK" FromRole="Has" ToRole="Bill" />
-          <NavigationProperty Name="Wallet" Relationship="Self.Has_Wallet_FK" FromRole="Has" ToRole="Wallet" />
-        </EntityType>
-        <EntityType Name="Money">
-          <Key>
-            <PropertyRef Name="MoneyId" />
-          </Key>
-          <Property Name="MoneyId" Type="Int32" Nullable="false" />
-          <Property Name="Amount" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="Has_Has_ID" Type="Decimal" Precision="28" Scale="0" Nullable="false" />
+          <Property Name="TypeId" Type="Int32" Nullable="false" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Files" Relationship="Self.File_FileType_FK" FromRole="FileType" ToRole="File" />
         </EntityType>
         <EntityType Name="Regular">
           <Key>
@@ -519,8 +462,8 @@
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Regular_UserId" Type="Int32" Nullable="false" />
           <Property Name="Valute_ValuteId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Bills" Relationship="Self.Bill_Wallet_FK" FromRole="Wallet" ToRole="Bill" />
           <NavigationProperty Name="Cards" Relationship="Self.Card_Wallet_FK" FromRole="Wallet" ToRole="Card" />
-          <NavigationProperty Name="Hass" Relationship="Self.Has_Wallet_FK" FromRole="Wallet" ToRole="Has" />
           <NavigationProperty Name="Regular" Relationship="Self.Wallet_Regular_FK" FromRole="Wallet" ToRole="Regular" />
           <NavigationProperty Name="Valute" Relationship="Self.Wallet_Valute_FK" FromRole="Wallet" ToRole="Valute" />
         </EntityType>
@@ -529,10 +472,10 @@
             <PropertyRef Name="WorkstationId" />
           </Key>
           <Property Name="WorkstationId" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="CreationDate" Type="DateTime" Precision="0" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CreationDate" Type="DateTime" Precision="0" Nullable="false" />
           <Property Name="Regular_UserId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Folders" Relationship="Self.Folder_Workstation_FK" FromRole="Workstation" ToRole="Folder" />
+          <NavigationProperty Name="Files" Relationship="Self.File_Workstation_FK" FromRole="Workstation" ToRole="File" />
           <NavigationProperty Name="Regular" Relationship="Self.Workstation_Regular_FK" FromRole="Workstation" ToRole="Regular" />
           <NavigationProperty Name="Admins" Relationship="Self.administrate" FromRole="Workstation" ToRole="Admin" />
         </EntityType>
@@ -572,15 +515,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="Has_Bill_FK">
-          <End Role="Bill" Type="Self.Bill" Multiplicity="1" />
-          <End Role="Has" Type="Self.Has" Multiplicity="*" />
+        <Association Name="Bill_Wallet_FK">
+          <End Role="Wallet" Type="Self.Wallet" Multiplicity="1" />
+          <End Role="Bill" Type="Self.Bill" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Bill">
-              <PropertyRef Name="BillId" />
+            <Principal Role="Wallet">
+              <PropertyRef Name="WalletId" />
             </Principal>
-            <Dependent Role="Has">
-              <PropertyRef Name="Bill_BillId" />
+            <Dependent Role="Bill">
+              <PropertyRef Name="Wallet_WalletId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -596,39 +539,27 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="File_Folder_FK">
-          <End Role="Folder" Type="Self.Folder" Multiplicity="1" />
+        <Association Name="File_FileType_FK">
+          <End Role="FileType" Type="Self.FileType" Multiplicity="1" />
           <End Role="File" Type="Self.File" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Folder">
-              <PropertyRef Name="FolderId" />
+            <Principal Role="FileType">
+              <PropertyRef Name="TypeId" />
             </Principal>
             <Dependent Role="File">
-              <PropertyRef Name="Folder_FolderId" />
+              <PropertyRef Name="FileType_TypeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="Folder_Workstation_FK">
+        <Association Name="File_Workstation_FK">
           <End Role="Workstation" Type="Self.Workstation" Multiplicity="1" />
-          <End Role="Folder" Type="Self.Folder" Multiplicity="*" />
+          <End Role="File" Type="Self.File" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Workstation">
               <PropertyRef Name="WorkstationId" />
             </Principal>
-            <Dependent Role="Folder">
+            <Dependent Role="File">
               <PropertyRef Name="Workstation_WorkstationId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="Has_Wallet_FK">
-          <End Role="Wallet" Type="Self.Wallet" Multiplicity="1" />
-          <End Role="Has" Type="Self.Has" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Wallet">
-              <PropertyRef Name="WalletId" />
-            </Principal>
-            <Dependent Role="Has">
-              <PropertyRef Name="Wallet_WalletId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -688,14 +619,12 @@
           <End Role="Admin" Type="Self.Admin" Multiplicity="*" />
           <End Role="User" Type="Self.User" Multiplicity="*" />
         </Association>
-        <EntityContainer Name="MoneyManagementEntities" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="MoneyDBEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Admins" EntityType="Self.Admin" />
           <EntitySet Name="Bills" EntityType="Self.Bill" />
           <EntitySet Name="Cards" EntityType="Self.Card" />
           <EntitySet Name="Files" EntityType="Self.File" />
-          <EntitySet Name="Folders" EntityType="Self.Folder" />
-          <EntitySet Name="Hass" EntityType="Self.Has" />
-          <EntitySet Name="Moneys" EntityType="Self.Money" />
+          <EntitySet Name="FileTypes" EntityType="Self.FileType" />
           <EntitySet Name="Regulars" EntityType="Self.Regular" />
           <EntitySet Name="Users" EntityType="Self.User" />
           <EntitySet Name="Valutes" EntityType="Self.Valute" />
@@ -713,25 +642,21 @@
             <End Role="File" EntitySet="Files" />
             <End Role="Bill" EntitySet="Bills" />
           </AssociationSet>
-          <AssociationSet Name="Has_Bill_FK" Association="Self.Has_Bill_FK">
+          <AssociationSet Name="Bill_Wallet_FK" Association="Self.Bill_Wallet_FK">
+            <End Role="Wallet" EntitySet="Wallets" />
             <End Role="Bill" EntitySet="Bills" />
-            <End Role="Has" EntitySet="Hass" />
           </AssociationSet>
           <AssociationSet Name="Card_Wallet_FK" Association="Self.Card_Wallet_FK">
             <End Role="Wallet" EntitySet="Wallets" />
             <End Role="Card" EntitySet="Cards" />
           </AssociationSet>
-          <AssociationSet Name="File_Folder_FK" Association="Self.File_Folder_FK">
-            <End Role="Folder" EntitySet="Folders" />
+          <AssociationSet Name="File_FileType_FK" Association="Self.File_FileType_FK">
+            <End Role="FileType" EntitySet="FileTypes" />
             <End Role="File" EntitySet="Files" />
           </AssociationSet>
-          <AssociationSet Name="Folder_Workstation_FK" Association="Self.Folder_Workstation_FK">
+          <AssociationSet Name="File_Workstation_FK" Association="Self.File_Workstation_FK">
             <End Role="Workstation" EntitySet="Workstations" />
-            <End Role="Folder" EntitySet="Folders" />
-          </AssociationSet>
-          <AssociationSet Name="Has_Wallet_FK" Association="Self.Has_Wallet_FK">
-            <End Role="Wallet" EntitySet="Wallets" />
-            <End Role="Has" EntitySet="Hass" />
+            <End Role="File" EntitySet="Files" />
           </AssociationSet>
           <AssociationSet Name="Regular_User_FK" Association="Self.Regular_User_FK">
             <End Role="User" EntitySet="Users" />
@@ -763,26 +688,27 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="MoneyManagementModelStoreContainer" CdmEntityContainer="MoneyManagementEntities">
+        <EntityContainerMapping StorageEntityContainer="MoneyDBModelStoreContainer" CdmEntityContainer="MoneyDBEntities">
           <EntitySetMapping Name="Admins">
-            <EntityTypeMapping TypeName="MoneyManagementModel.Admin">
+            <EntityTypeMapping TypeName="MoneyDBModel.Admin">
               <MappingFragment StoreEntitySet="Admin">
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Bills">
-            <EntityTypeMapping TypeName="MoneyManagementModel.Bill">
+            <EntityTypeMapping TypeName="MoneyDBModel.Bill">
               <MappingFragment StoreEntitySet="Bill">
                 <ScalarProperty Name="BillId" ColumnName="BillId" />
                 <ScalarProperty Name="ValuteName" ColumnName="ValuteName" />
                 <ScalarProperty Name="Amount" ColumnName="Amount" />
                 <ScalarProperty Name="File_FileId" ColumnName="File_FileId" />
+                <ScalarProperty Name="Wallet_WalletId" ColumnName="Wallet_WalletId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Cards">
-            <EntityTypeMapping TypeName="MoneyManagementModel.Card">
+            <EntityTypeMapping TypeName="MoneyDBModel.Card">
               <MappingFragment StoreEntitySet="Card">
                 <ScalarProperty Name="CardId" ColumnName="CardId" />
                 <ScalarProperty Name="Amount" ColumnName="Amount" />
@@ -792,7 +718,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Files">
-            <EntityTypeMapping TypeName="MoneyManagementModel.File">
+            <EntityTypeMapping TypeName="MoneyDBModel.File">
               <MappingFragment StoreEntitySet="File">
                 <ScalarProperty Name="FileId" ColumnName="FileId" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -800,49 +726,28 @@
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
                 <ScalarProperty Name="Folder_FolderId" ColumnName="Folder_FolderId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Folders">
-            <EntityTypeMapping TypeName="MoneyManagementModel.Folder">
-              <MappingFragment StoreEntitySet="Folder">
-                <ScalarProperty Name="FolderId" ColumnName="FolderId" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
                 <ScalarProperty Name="Workstation_WorkstationId" ColumnName="Workstation_WorkstationId" />
+                <ScalarProperty Name="FileType_TypeId" ColumnName="FileType_TypeId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Hass">
-            <EntityTypeMapping TypeName="MoneyManagementModel.Has">
-              <MappingFragment StoreEntitySet="Has">
-                <ScalarProperty Name="PaymentDate" ColumnName="PaymentDate" />
-                <ScalarProperty Name="Money_MoneyId" ColumnName="Money_MoneyId" />
-                <ScalarProperty Name="Wallet_WalletId" ColumnName="Wallet_WalletId" />
-                <ScalarProperty Name="Bill_BillId" ColumnName="Bill_BillId" />
-                <ScalarProperty Name="Has_ID" ColumnName="Has_ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Moneys">
-            <EntityTypeMapping TypeName="MoneyManagementModel.Money">
-              <MappingFragment StoreEntitySet="Money">
-                <ScalarProperty Name="MoneyId" ColumnName="MoneyId" />
-                <ScalarProperty Name="Amount" ColumnName="Amount" />
-                <ScalarProperty Name="Has_Has_ID" ColumnName="Has_Has_ID" />
+          <EntitySetMapping Name="FileTypes">
+            <EntityTypeMapping TypeName="MoneyDBModel.FileType">
+              <MappingFragment StoreEntitySet="FileType">
+                <ScalarProperty Name="TypeId" ColumnName="TypeId" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Regulars">
-            <EntityTypeMapping TypeName="MoneyManagementModel.Regular">
+            <EntityTypeMapping TypeName="MoneyDBModel.Regular">
               <MappingFragment StoreEntitySet="Regular">
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Users">
-            <EntityTypeMapping TypeName="MoneyManagementModel.User">
+            <EntityTypeMapping TypeName="MoneyDBModel.User">
               <MappingFragment StoreEntitySet="User">
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
@@ -853,7 +758,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Valutes">
-            <EntityTypeMapping TypeName="MoneyManagementModel.Valute">
+            <EntityTypeMapping TypeName="MoneyDBModel.Valute">
               <MappingFragment StoreEntitySet="Valute">
                 <ScalarProperty Name="ValuteId" ColumnName="ValuteId" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -862,7 +767,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Wallets">
-            <EntityTypeMapping TypeName="MoneyManagementModel.Wallet">
+            <EntityTypeMapping TypeName="MoneyDBModel.Wallet">
               <MappingFragment StoreEntitySet="Wallet">
                 <ScalarProperty Name="WalletId" ColumnName="WalletId" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -872,7 +777,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Workstations">
-            <EntityTypeMapping TypeName="MoneyManagementModel.Workstation">
+            <EntityTypeMapping TypeName="MoneyDBModel.Workstation">
               <MappingFragment StoreEntitySet="Workstation">
                 <ScalarProperty Name="WorkstationId" ColumnName="WorkstationId" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -881,7 +786,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="administrate" TypeName="MoneyManagementModel.administrate" StoreEntitySet="administrate">
+          <AssociationSetMapping Name="administrate" TypeName="MoneyDBModel.administrate" StoreEntitySet="administrate">
             <EndProperty Name="Admin">
               <ScalarProperty Name="UserId" ColumnName="Admin_UserId" />
             </EndProperty>
@@ -889,7 +794,7 @@
               <ScalarProperty Name="WorkstationId" ColumnName="Workstation_WorkstationId" />
             </EndProperty>
           </AssociationSetMapping>
-          <AssociationSetMapping Name="operates" TypeName="MoneyManagementModel.operates" StoreEntitySet="operates">
+          <AssociationSetMapping Name="operates" TypeName="MoneyDBModel.operates" StoreEntitySet="operates">
             <EndProperty Name="Admin">
               <ScalarProperty Name="UserId" ColumnName="Admin_UserId" />
             </EndProperty>

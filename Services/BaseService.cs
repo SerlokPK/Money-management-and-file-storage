@@ -9,9 +9,9 @@ namespace Services
 {
     public class BaseService
     {
-        public MoneyManagementEntities GetContext()
+        public MoneyDBEntities GetContext()
         {
-            return new MoneyManagementEntities();
+            return new MoneyDBEntities();
         }
     }
 }

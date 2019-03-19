@@ -12,21 +12,18 @@ namespace Services.DataBase
     using System;
     using System.Collections.Generic;
     
-    public partial class Folder
+    public partial class FileType
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Folder()
+        public FileType()
         {
             this.Files = new HashSet<File>();
         }
     
-        public int FolderId { get; set; }
+        public int TypeId { get; set; }
         public string Name { get; set; }
-        public Nullable<System.DateTime> CreationDate { get; set; }
-        public int Workstation_WorkstationId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<File> Files { get; set; }
-        public virtual Workstation Workstation { get; set; }
     }
 }

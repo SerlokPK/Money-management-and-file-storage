@@ -1,4 +1,6 @@
-﻿using Services.Interface;
+﻿using Models.User;
+using Services.Interface;
+using System;
 using System.Linq;
 
 namespace Services.User
@@ -26,6 +28,7 @@ namespace Services.User
                 {
                     CurrentUser = context.Users.Where(x => x.Email == email && x.Password == password).Select(x => new Models.User.User
                     {
+                        UserId = x.UserId,
                         Email = x.Email,
                         FirstName = x.Name,
                         LastName = x.Lastname,
@@ -43,22 +46,58 @@ namespace Services.User
             {
                 using (var context = GetContext())
                 {
-                    int userId = context.Users.Any() ? context.Users.Max(x => x.UserId) + 1 : 1;
-                    context.Users.Add(new DataBase.User
+                    using (var transaction = context.Database.BeginTransaction())
                     {
-                        UserId = userId,
-                        Email = user.Email,
-                        Lastname = user.LastName,
-                        Name = user.FirstName,
-                        Password = user.Password,
-                    });
+                        try
+                        {
+                            int userId = context.Users.Any() ? context.Users.Max(x => x.UserId) + 1 : 1;
+                            context.Users.Add(new DataBase.User
+                            {
+                                UserId = userId,
+                                Email = user.Email,
+                                Lastname = user.LastName,
+                                Name = user.FirstName,
+                                Password = user.Password,
+                            });
+                            context.SaveChanges();
 
-                    context.SaveChanges();
+                            context.Regulars.Add(new DataBase.Regular
+                            {
+                                UserId = userId,
+                            });
+
+                            context.SaveChanges();
+
+                            transaction.Commit();
+                        }
+                        catch (Exception)
+                        {
+                            transaction.Rollback();
+                        }
+                    }
                 }
+                
                 CurrentUser = user;
                 return true;
             }
             return false;
+        }
+
+        public Models.User.User GetCurrentUser()
+        {
+            return CurrentUser;
+        }
+
+        public void UpdateUserDetails(Models.User.User user)
+        {
+            using (var context = GetContext())
+            {
+                var userToUpdate = context.Users.Where(x => x.Email == user.Email).Single();
+                userToUpdate.Name = user.FirstName;
+                userToUpdate.Lastname = user.LastName;
+                userToUpdate.Password = user.Password;
+                context.SaveChanges();
+            }
         }
     }
 }

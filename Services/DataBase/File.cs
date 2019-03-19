@@ -26,9 +26,12 @@ namespace Services.DataBase
         public string Description { get; set; }
         public Nullable<System.DateTime> CreationDate { get; set; }
         public int Folder_FolderId { get; set; }
+        public int Workstation_WorkstationId { get; set; }
+        public int FileType_TypeId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Bill> Bills { get; set; }
-        public virtual Folder Folder { get; set; }
+        public virtual FileType FileType { get; set; }
+        public virtual Workstation Workstation { get; set; }
     }
 }
