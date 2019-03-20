@@ -12,11 +12,20 @@ namespace Services.User
         {
             using (var context = GetContext())
             {
-                if (string.IsNullOrEmpty(password))
+                bool exist = false;
+                try
                 {
-                    return context.Users.Any(u => u.Email == email);
+                    if (string.IsNullOrEmpty(password))
+                    {
+                        exist = context.Users.Any(u => u.Email == email);
+                    }
+                    exist = context.Users.Any(u => u.Email == email && u.Password == password);
                 }
-                return context.Users.Any(u => u.Email == email && u.Password == password);
+                catch (Exception)
+                {
+
+                }
+                return exist;
             }
         }
 
@@ -26,16 +35,23 @@ namespace Services.User
             {
                 using (var context = GetContext())
                 {
-                    CurrentUser = context.Users.Where(x => x.Email == email && x.Password == password).Select(x => new Models.User.User
+                    try
                     {
-                        UserId = x.UserId,
-                        Email = x.Email,
-                        FirstName = x.Name,
-                        LastName = x.Lastname,
-                        Password = x.Password,
-                    }).Single();
+                        CurrentUser = context.Users.Where(x => x.Email == email && x.Password == password).Select(x => new Models.User.User
+                        {
+                            UserId = x.UserId,
+                            Email = x.Email,
+                            FirstName = x.Name,
+                            LastName = x.Lastname,
+                            Password = x.Password,
+                        }).Single();
+
+                        return true;
+                    }
+                    catch (Exception)
+                    {
+                    }
                 }
-                return true;
             }
             return false;
         }
@@ -92,11 +108,17 @@ namespace Services.User
         {
             using (var context = GetContext())
             {
-                var userToUpdate = context.Users.Where(x => x.Email == user.Email).Single();
-                userToUpdate.Name = user.FirstName;
-                userToUpdate.Lastname = user.LastName;
-                userToUpdate.Password = user.Password;
-                context.SaveChanges();
+                try
+                {
+                    var userToUpdate = context.Users.Where(x => x.Email == user.Email).Single();
+                    userToUpdate.Name = user.FirstName;
+                    userToUpdate.Lastname = user.LastName;
+                    userToUpdate.Password = user.Password;
+                    context.SaveChanges();
+                }
+                catch (Exception)
+                {
+                }
             }
         }
     }
