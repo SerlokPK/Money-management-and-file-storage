@@ -15,6 +15,18 @@ namespace Money_and_data_management.ViewModel
         private IWorkstationService workstationService;
         private IUserService userService;
         public ObservableCollection<Workstation> Workstations { get; set; }
+        private ObservableCollection<File> files;
+        public ObservableCollection<File> Files {
+            get { return files; }
+            set
+            {
+                if (files != value)
+                {
+                    files = value;
+                    OnPropertyChanged("Files");
+                }
+            }
+        }
         private Workstation selectedWorkstation;
         private Workstation validationWorkstation;
         private File selectedFile;
@@ -23,6 +35,7 @@ namespace Money_and_data_management.ViewModel
         public CommandHelper<string> ChangePageCommand { get; set; }
         public CommandHelper DeleteCommand { get; set; }
         public CommandHelper AddCommand { get; set; }
+        public CommandHelper ShowFilesCommand { get; set; }
         public CommandHelper DeleteFileCommand { get; set; }
         public CommandHelper AddFileCommand { get; set; }
 
@@ -33,6 +46,8 @@ namespace Money_and_data_management.ViewModel
             {
                 selectedWorkstation = value;
                 DeleteCommand.RaiseCanExecuteChanged();
+                ShowFilesCommand.RaiseCanExecuteChanged();
+                AddFileCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -75,28 +90,57 @@ namespace Money_and_data_management.ViewModel
             pageService = SimpleDI.Instance.PageService;
             workstationService = SimpleDI.Instance.WorkstationService;
             userService = SimpleDI.Instance.UserService;
+            Files = new ObservableCollection<File>();
 
             ChangePageCommand = new CommandHelper<string>(ChangePage);
 
             DeleteCommand = new CommandHelper(DeleteAction, CanDelete);
             AddCommand = new CommandHelper(AddAction);
+            ShowFilesCommand = new CommandHelper(ShowFilesAction, CanDelete);
             validationWorkstation = new Workstation();
 
             DeleteFileCommand = new CommandHelper(DeleteFileAction, CanDeleleFile);
-            AddFileCommand = new CommandHelper(AddFileAction);
+            AddFileCommand = new CommandHelper(AddFileAction, CanDelete);
             validationFile = new File();
         }
 
         private void AddFileAction()
         {
-            throw new NotImplementedException();
+            ValidationFile.Validate(EPages.WORKSTATION);
+            if (ValidationFile.IsValid)
+            {
+                if (!workstationService.SaveFile(ValidationFile, SelectedWorkstation.WorkstationId))
+                {
+                    ValidationFile.ValidationErrors["Name"] = "You already used this name.";
+                    ValidationFile.ValidationPropertyChange();
+                }
+                else
+                {
+                    Files.Add(new File
+                    {
+                        FileId = ValidationFile.FileId,
+                        Name = ValidationFile.Name,
+                        CreationDate = ValidationFile.CreationDate,
+                        Description = ValidationFile.Description,
+                        UrlName = ValidationFile.UrlName,
+                        Extension = ValidationFile.Extension,
+                        WorkstationId = SelectedWorkstation.WorkstationId,
+                    });
+                    ValidationFile.Name = "";
+                    ValidationFile.UrlName = "";
+                }
+            }
         }
 
         private void DeleteFileAction()
         {
-            throw new NotImplementedException();
+            workstationService.RemoveFile(SelectedFile);
+            Files.Remove(Files.Where(x => x.FileId == SelectedFile.FileId).Single());
         }
-
+        private void ShowFilesAction()
+        {
+            Files = workstationService.GetFiles(SelectedWorkstation.WorkstationId);
+        }
         private bool CanDelete()
         {
             return SelectedWorkstation != null;
@@ -125,6 +169,7 @@ namespace Money_and_data_management.ViewModel
                         Name = ValidationWorkstation.Name,
                         CreationDate = ValidationWorkstation.CreationDate,
                     });
+                    ValidationWorkstation.Name = "";
                 }
             }
         }
@@ -133,6 +178,7 @@ namespace Money_and_data_management.ViewModel
         {
             workstationService.RemoveWorkstation(SelectedWorkstation);
             Workstations.Remove(Workstations.Where(x => x.WorkstationId == SelectedWorkstation.WorkstationId).Single());
+            Files.ToList().RemoveAll(x => x.WorkstationId == SelectedWorkstation.WorkstationId);
         }
 
         private void ChangePage(string page)

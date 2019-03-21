@@ -1,6 +1,7 @@
 ﻿using Models.Workstation;
 using Services.Interface;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -33,6 +34,50 @@ namespace Services.Workstation
             }
         }
 
+        public ObservableCollection<File> GetFiles(int workstationId)
+        {
+            ObservableCollection<File> Files = new ObservableCollection<File>();
+            using (var context = GetContext())
+            {
+                try
+                {
+                    var list = context.sp_GetFilesForWorkstation(workstationId).Select(x => new File {
+                        FileId = x.FileId,
+                        Description = x.Description,
+                        CreationDate = x.CreationDate,
+                        Name = x.Name,
+                        UrlName = x.UrlName,
+                        Extension = x.Extension,
+                    }).ToList();
+                    
+                    foreach(var item in list)
+                    {
+                        Files.Add(item);
+                    }
+                }
+                catch (System.Exception)
+                {
+                }
+            }
+            return Files;
+        }
+
+        public void RemoveFile(File file)
+        {
+            using (var context = GetContext())
+            {
+                try
+                {
+                    var fileDB = context.Files.Where(x => x.FileId == file.FileId).Single();
+                    context.Files.Remove(fileDB);
+                    context.SaveChanges();
+                }
+                catch (System.Exception)
+                {
+                }
+            }
+        }
+
         public void RemoveWorkstation(Models.Workstation.Workstation workstation)
         {
             using (var context = GetContext())
@@ -47,6 +92,38 @@ namespace Services.Workstation
                 {
                 }
             }
+        }
+
+        public bool SaveFile(Models.Workstation.File file, int workstationId)
+        {
+            using (var context = GetContext())
+            {
+                try
+                {
+                    if (!context.Files.Where(x => x.Workstation_WorkstationId == workstationId).Any(x => x.Name.ToLower() == file.Name.ToLower()))
+                    {
+                        var fileId = context.Files.Any() ? context.Files.Max(x => x.FileId) + 1 : 1;
+                        file.CreationDate = DateTime.Now.Date;
+                        context.Files.Add(new DataBase.File
+                        {
+                            FileId = fileId,
+                            Workstation_WorkstationId = workstationId,
+                            CreationDate = file.CreationDate,
+                            Name = file.Name,
+                            Description = file.Description,
+                            FileType_TypeId = 1,
+                            UrlName = file.UrlName,
+                        });
+                        context.SaveChanges();
+                        file.FileId = fileId;
+                        return true;
+                    }
+                }
+                catch (System.Exception)
+                {
+                }
+            }
+            return false;
         }
 
         public bool SaveWorkstation(Models.Workstation.Workstation workstation, int userId)

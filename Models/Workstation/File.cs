@@ -1,16 +1,19 @@
 ﻿using Common.Enums;
 using Common.Helpers;
 using System;
+using System.Text.RegularExpressions;
 
 namespace Models.Workstation
 {
     public class File : ValidationBase
     {
         public int FileId { get; set; }
-        private string name { get; set; }
-        private string urlName { get; set; }
-        private string description { get; set; }
-        private DateTime creationDate { get; set; }
+        public int WorkstationId { get; set; }
+        private string name;
+        private string urlName;
+        private string description;
+        private DateTime creationDate;
+        private string extension;
 
         public string Name
         {
@@ -63,9 +66,24 @@ namespace Models.Workstation
                 }
             }
         }
+        public string Extension
+        {
+            get { return extension; }
+            set
+            {
+                if (extension != value)
+                {
+                    extension = value;
+                    OnPropertyChanged("Extension");
+                }
+            }
+        }
         protected override void ValidateSelf(EPages type)
         {
-            throw new System.NotImplementedException();
+            if (string.IsNullOrEmpty(this.name) || !Regex.IsMatch(this.name, "^.{1,50}$"))
+            {
+                this.ValidationErrors["Name"] = "Name can be between 1 and 50 characters.";
+            }
         }
     }
 }

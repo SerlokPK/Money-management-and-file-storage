@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\Users\Serlok\source\repos\SerlokPK\Money-management-and-file-storage\Services\DataBase\MoneyDB.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\Users\e3138-2015\Desktop\MoneyManagement\Money-management-and-file-storage\Services\DataBase\MoneyDBEntities.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

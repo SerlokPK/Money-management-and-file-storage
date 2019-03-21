@@ -24,8 +24,8 @@ namespace Services.DataBase
         public string Name { get; set; }
         public string UrlName { get; set; }
         public string Description { get; set; }
-        public Nullable<System.DateTime> CreationDate { get; set; }
-        public int Folder_FolderId { get; set; }
+        public System.DateTime CreationDate { get; set; }
+        public Nullable<System.DateTime> ModifiedDate { get; set; }
         public int Workstation_WorkstationId { get; set; }
         public int FileType_TypeId { get; set; }
     

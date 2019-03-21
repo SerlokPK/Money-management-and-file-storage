@@ -14,6 +14,14 @@
                 <Label Content="{Binding Path=CreationDate}" Width="285" FontSize="36"/>
             </StackPanel>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type data:File}">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="{Binding Path=Name}" Width="285" FontSize="20"/>
+                <Label Content="{Binding Path=CreationDate}" Width="285" FontSize="20"/>
+                <Label Content="{Binding Path=UrlName}" Width="285" FontSize="20"/>
+                <Label Content="{Binding Path=Extension}" Width="285" FontSize="20"/>
+            </StackPanel>
+        </DataTemplate>
     </UserControl.Resources>
     <Grid>
         <Button x:Name="acc_btn"
@@ -71,6 +79,13 @@
                     <TextBox Text="{Binding ValidationFile.Name}" Width="285" FontSize="36"/>
                     <TextBlock 
                         Text="{Binding ValidationFile.ValidationErrors[Name]}"
+                        Foreground="Red" Width="362" FontSize="24" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label FontSize="36">UrlName:</Label>
+                    <TextBox Text="{Binding ValidationFile.UrlName}" Width="285" FontSize="36"/>
+                    <TextBlock 
+                        Text="{Binding ValidationFile.ValidationErrors[UrlName]}"
                         Foreground="Red" Width="362" FontSize="24" />
                 </StackPanel>
                 <Button Content="Add"

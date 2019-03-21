@@ -52,49 +52,52 @@
   <ItemGroup>
     <Compile Include="BaseService.cs" />
     <Compile Include="DataBase\Admin.cs">
-      <DependentUpon>MoneyDB.tt</DependentUpon>
+      <DependentUpon>MoneyDBEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="DataBase\Bill.cs">
-      <DependentUpon>MoneyDB.tt</DependentUpon>
+      <DependentUpon>MoneyDBEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="DataBase\Card.cs">
-      <DependentUpon>MoneyDB.tt</DependentUpon>
+      <DependentUpon>MoneyDBEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="DataBase\File.cs">
-      <DependentUpon>MoneyDB.tt</DependentUpon>
+      <DependentUpon>MoneyDBEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="DataBase\FileType.cs">
-      <DependentUpon>MoneyDB.tt</DependentUpon>
+      <DependentUpon>MoneyDBEntities.tt</DependentUpon>
     </Compile>
-    <Compile Include="DataBase\MoneyDB.Context.cs">
+    <Compile Include="DataBase\MoneyDBEntities.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>MoneyDB.Context.tt</DependentUpon>
+      <DependentUpon>MoneyDBEntities.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="DataBase\MoneyDB.cs">
+    <Compile Include="DataBase\MoneyDBEntities.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>MoneyDB.tt</DependentUpon>
+      <DependentUpon>MoneyDBEntities.tt</DependentUpon>
     </Compile>
-    <Compile Include="DataBase\MoneyDB.Designer.cs">
+    <Compile Include="DataBase\MoneyDBEntities.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>MoneyDB.edmx</DependentUpon>
+      <DependentUpon>MoneyDBEntities.edmx</DependentUpon>
     </Compile>
     <Compile Include="DataBase\Regular.cs">
-      <DependentUpon>MoneyDB.tt</DependentUpon>
+      <DependentUpon>MoneyDBEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataBase\sp_GetFilesForWorkstation_Result.cs">
+      <DependentUpon>MoneyDBEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="DataBase\User.cs">
-      <DependentUpon>MoneyDB.tt</DependentUpon>
+      <DependentUpon>MoneyDBEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="DataBase\Valute.cs">
-      <DependentUpon>MoneyDB.tt</DependentUpon>
+      <DependentUpon>MoneyDBEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="DataBase\Wallet.cs">
-      <DependentUpon>MoneyDB.tt</DependentUpon>
+      <DependentUpon>MoneyDBEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="DataBase\Workstation.cs">
-      <DependentUpon>MoneyDB.tt</DependentUpon>
+      <DependentUpon>MoneyDBEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Interface\IPageService.cs" />
     <Compile Include="Interface\IUserService.cs" />
@@ -117,12 +120,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <EntityDeploy Include="DataBase\MoneyDB.edmx">
+    <EntityDeploy Include="DataBase\MoneyDBEntities.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>MoneyDB.Designer.cs</LastGenOutput>
+      <LastGenOutput>MoneyDBEntities.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <None Include="DataBase\MoneyDB.edmx.diagram">
-      <DependentUpon>MoneyDB.edmx</DependentUpon>
+    <None Include="DataBase\MoneyDBEntities.edmx.diagram">
+      <DependentUpon>MoneyDBEntities.edmx</DependentUpon>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
@@ -130,15 +133,15 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="DataBase\MoneyDB.Context.tt">
+    <Content Include="DataBase\MoneyDBEntities.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>MoneyDB.edmx</DependentUpon>
-      <LastGenOutput>MoneyDB.Context.cs</LastGenOutput>
+      <DependentUpon>MoneyDBEntities.edmx</DependentUpon>
+      <LastGenOutput>MoneyDBEntities.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="DataBase\MoneyDB.tt">
+    <Content Include="DataBase\MoneyDBEntities.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>MoneyDB.edmx</DependentUpon>
-      <LastGenOutput>MoneyDB.cs</LastGenOutput>
+      <DependentUpon>MoneyDBEntities.edmx</DependentUpon>
+      <LastGenOutput>MoneyDBEntities.cs</LastGenOutput>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

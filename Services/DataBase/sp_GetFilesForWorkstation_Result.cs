@@ -10,17 +10,15 @@
 namespace Services.DataBase
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class Bill
+    public partial class sp_GetFilesForWorkstation_Result
     {
-        public int BillId { get; set; }
-        public string ValuteName { get; set; }
-        public decimal Amount { get; set; }
-        public int File_FileId { get; set; }
-        public int Wallet_WalletId { get; set; }
-    
-        public virtual File File { get; set; }
-        public virtual Wallet Wallet { get; set; }
+        public int FileId { get; set; }
+        public string Name { get; set; }
+        public string Extension { get; set; }
+        public string UrlName { get; set; }
+        public string Description { get; set; }
+        public System.DateTime CreationDate { get; set; }
+        public string FileTypeName { get; set; }
     }
 }

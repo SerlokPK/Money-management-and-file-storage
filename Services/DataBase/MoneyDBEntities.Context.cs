@@ -12,6 +12,8 @@ namespace Services.DataBase
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class MoneyDBEntities : DbContext
     {
@@ -35,5 +37,14 @@ namespace Services.DataBase
         public virtual DbSet<Valute> Valutes { get; set; }
         public virtual DbSet<Wallet> Wallets { get; set; }
         public virtual DbSet<Workstation> Workstations { get; set; }
+    
+        public virtual ObjectResult<sp_GetFilesForWorkstation_Result> sp_GetFilesForWorkstation(Nullable<int> workstationId)
+        {
+            var workstationIdParameter = workstationId.HasValue ?
+                new ObjectParameter("WorkstationId", workstationId) :
+                new ObjectParameter("WorkstationId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_GetFilesForWorkstation_Result>("sp_GetFilesForWorkstation", workstationIdParameter);
+        }
     }
 }

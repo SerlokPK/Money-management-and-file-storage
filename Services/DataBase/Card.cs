@@ -15,7 +15,7 @@ namespace Services.DataBase
     public partial class Card
     {
         public int CardId { get; set; }
-        public Nullable<decimal> Amount { get; set; }
+        public decimal Amount { get; set; }
         public string Type { get; set; }
         public Nullable<int> Wallet_WalletId { get; set; }
     

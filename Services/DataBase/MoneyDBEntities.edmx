@@ -4,14 +4,14 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="MoneyDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="MoneyDB.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Admin">
           <Key>
             <PropertyRef Name="UserId" />
           </Key>
           <Property Name="UserId" Type="int" Nullable="false" />
         </EntityType>
-        <EntityType Name="administrate">
+        <EntityType Name="Administrate">
           <Key>
             <PropertyRef Name="Admin_UserId" />
             <PropertyRef Name="Workstation_WorkstationId" />
@@ -24,8 +24,8 @@
             <PropertyRef Name="BillId" />
           </Key>
           <Property Name="BillId" Type="int" Nullable="false" />
-          <Property Name="ValuteName" Type="varchar" MaxLength="50" />
-          <Property Name="Amount" Type="money" />
+          <Property Name="ValuteName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Amount" Type="money" Nullable="false" />
           <Property Name="File_FileId" Type="int" Nullable="false" />
           <Property Name="Wallet_WalletId" Type="int" Nullable="false" />
         </EntityType>
@@ -34,8 +34,8 @@
             <PropertyRef Name="CardId" />
           </Key>
           <Property Name="CardId" Type="int" Nullable="false" />
-          <Property Name="Amount" Type="money" />
-          <Property Name="Type" Type="varchar" MaxLength="1" />
+          <Property Name="Amount" Type="money" Nullable="false" />
+          <Property Name="Type" Type="char" MaxLength="1" Nullable="false" />
           <Property Name="Wallet_WalletId" Type="int" />
         </EntityType>
         <EntityType Name="File">
@@ -43,11 +43,11 @@
             <PropertyRef Name="FileId" />
           </Key>
           <Property Name="FileId" Type="int" Nullable="false" />
-          <Property Name="Name" Type="varchar" MaxLength="50" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="UrlName" Type="varchar" MaxLength="2000" />
           <Property Name="Description" Type="varchar" MaxLength="2000" />
-          <Property Name="CreationDate" Type="date" />
-          <Property Name="Folder_FolderId" Type="int" Nullable="false" />
+          <Property Name="CreationDate" Type="date" Nullable="false" />
+          <Property Name="ModifiedDate" Type="date" />
           <Property Name="Workstation_WorkstationId" Type="int" Nullable="false" />
           <Property Name="FileType_TypeId" Type="int" Nullable="false" />
         </EntityType>
@@ -56,9 +56,9 @@
             <PropertyRef Name="TypeId" />
           </Key>
           <Property Name="TypeId" Type="int" Nullable="false" />
-          <Property Name="Name" Type="varchar" MaxLength="50" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
-        <EntityType Name="operates">
+        <EntityType Name="Operates">
           <Key>
             <PropertyRef Name="Admin_UserId" />
             <PropertyRef Name="User_UserId" />
@@ -77,17 +77,17 @@
             <PropertyRef Name="UserId" />
           </Key>
           <Property Name="UserId" Type="int" Nullable="false" />
-          <Property Name="Email" Type="varchar" MaxLength="50" />
-          <Property Name="Name" Type="varchar" MaxLength="50" />
-          <Property Name="Lastname" Type="varchar" MaxLength="50" />
-          <Property Name="Password" Type="varchar" MaxLength="50" />
+          <Property Name="Email" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Lastname" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Valute">
           <Key>
             <PropertyRef Name="ValuteId" />
           </Key>
           <Property Name="ValuteId" Type="int" Nullable="false" />
-          <Property Name="Name" Type="varchar" MaxLength="50" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Admin_UserId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Wallet">
@@ -95,7 +95,7 @@
             <PropertyRef Name="WalletId" />
           </Key>
           <Property Name="WalletId" Type="int" Nullable="false" />
-          <Property Name="Name" Type="varchar" MaxLength="50" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Regular_UserId" Type="int" Nullable="false" />
           <Property Name="Valute_ValuteId" Type="int" Nullable="false" />
         </EntityType>
@@ -120,6 +120,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="Administrate_Admin_FK">
+          <End Role="Admin" Type="Self.Admin" Multiplicity="1" />
+          <End Role="Administrate" Type="Self.Administrate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Admin">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Administrate">
+              <PropertyRef Name="Admin_UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Administrate_Workstation_FK">
+          <End Role="Workstation" Type="Self.Workstation" Multiplicity="1" />
+          <End Role="Administrate" Type="Self.Administrate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Workstation">
+              <PropertyRef Name="WorkstationId" />
+            </Principal>
+            <Dependent Role="Administrate">
+              <PropertyRef Name="Workstation_WorkstationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="Bill_File_FK">
           <End Role="File" Type="Self.File" Multiplicity="1" />
           <End Role="Bill" Type="Self.Bill" Multiplicity="*" />
@@ -169,7 +193,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="File_Workstation_FK">
-          <End Role="Workstation" Type="Self.Workstation" Multiplicity="1" />
+          <End Role="Workstation" Type="Self.Workstation" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="File" Type="Self.File" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Workstation">
@@ -180,51 +206,27 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_ASS_16">
+        <Association Name="Operates_Admin_FK">
           <End Role="Admin" Type="Self.Admin" Multiplicity="1" />
-          <End Role="operates" Type="Self.operates" Multiplicity="*" />
+          <End Role="Operates" Type="Self.Operates" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Admin">
               <PropertyRef Name="UserId" />
             </Principal>
-            <Dependent Role="operates">
+            <Dependent Role="Operates">
               <PropertyRef Name="Admin_UserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_ASS_17">
+        <Association Name="Operates_User_FK">
           <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="operates" Type="Self.operates" Multiplicity="*" />
+          <End Role="Operates" Type="Self.Operates" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="User">
               <PropertyRef Name="UserId" />
             </Principal>
-            <Dependent Role="operates">
+            <Dependent Role="Operates">
               <PropertyRef Name="User_UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ASS_3">
-          <End Role="Admin" Type="Self.Admin" Multiplicity="1" />
-          <End Role="administrate" Type="Self.administrate" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Admin">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="administrate">
-              <PropertyRef Name="Admin_UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ASS_4">
-          <End Role="Workstation" Type="Self.Workstation" Multiplicity="1" />
-          <End Role="administrate" Type="Self.administrate" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Workstation">
-              <PropertyRef Name="WorkstationId" />
-            </Principal>
-            <Dependent Role="administrate">
-              <PropertyRef Name="Workstation_WorkstationId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -288,14 +290,20 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="MoneyDBModelStoreContainer">
+        <Function Name="fs_GetExtensionFromFilename" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="nvarchar">
+          <Parameter Name="Name" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="sp_GetFilesForWorkstation" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="WorkstationId" Type="int" Mode="In" />
+        </Function>
+        <EntityContainer Name="MoneyDBStoreContainer">
           <EntitySet Name="Admin" EntityType="Self.Admin" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="administrate" EntityType="Self.administrate" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Administrate" EntityType="Self.Administrate" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Bill" EntityType="Self.Bill" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Card" EntityType="Self.Card" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="File" EntityType="Self.File" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FileType" EntityType="Self.FileType" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="operates" EntityType="Self.operates" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Operates" EntityType="Self.Operates" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Regular" EntityType="Self.Regular" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Valute" EntityType="Self.Valute" Schema="dbo" store:Type="Tables" />
@@ -304,6 +312,14 @@
           <AssociationSet Name="Admin_User_FK" Association="Self.Admin_User_FK">
             <End Role="User" EntitySet="User" />
             <End Role="Admin" EntitySet="Admin" />
+          </AssociationSet>
+          <AssociationSet Name="Administrate_Admin_FK" Association="Self.Administrate_Admin_FK">
+            <End Role="Admin" EntitySet="Admin" />
+            <End Role="Administrate" EntitySet="Administrate" />
+          </AssociationSet>
+          <AssociationSet Name="Administrate_Workstation_FK" Association="Self.Administrate_Workstation_FK">
+            <End Role="Workstation" EntitySet="Workstation" />
+            <End Role="Administrate" EntitySet="Administrate" />
           </AssociationSet>
           <AssociationSet Name="Bill_File_FK" Association="Self.Bill_File_FK">
             <End Role="File" EntitySet="File" />
@@ -325,21 +341,13 @@
             <End Role="Workstation" EntitySet="Workstation" />
             <End Role="File" EntitySet="File" />
           </AssociationSet>
-          <AssociationSet Name="FK_ASS_16" Association="Self.FK_ASS_16">
+          <AssociationSet Name="Operates_Admin_FK" Association="Self.Operates_Admin_FK">
             <End Role="Admin" EntitySet="Admin" />
-            <End Role="operates" EntitySet="operates" />
+            <End Role="Operates" EntitySet="Operates" />
           </AssociationSet>
-          <AssociationSet Name="FK_ASS_17" Association="Self.FK_ASS_17">
+          <AssociationSet Name="Operates_User_FK" Association="Self.Operates_User_FK">
             <End Role="User" EntitySet="User" />
-            <End Role="operates" EntitySet="operates" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ASS_3" Association="Self.FK_ASS_3">
-            <End Role="Admin" EntitySet="Admin" />
-            <End Role="administrate" EntitySet="administrate" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ASS_4" Association="Self.FK_ASS_4">
-            <End Role="Workstation" EntitySet="Workstation" />
-            <End Role="administrate" EntitySet="administrate" />
+            <End Role="Operates" EntitySet="Operates" />
           </AssociationSet>
           <AssociationSet Name="Regular_User_FK" Association="Self.Regular_User_FK">
             <End Role="User" EntitySet="User" />
@@ -362,10 +370,11 @@
             <End Role="Workstation" EntitySet="Workstation" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="MoneyDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="MoneyDB" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="Admin">
           <Key>
             <PropertyRef Name="UserId" />
@@ -373,16 +382,16 @@
           <Property Name="UserId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="User" Relationship="Self.Admin_User_FK" FromRole="Admin" ToRole="User" />
           <NavigationProperty Name="Valutes" Relationship="Self.Valute_Admin_FK" FromRole="Admin" ToRole="Valute" />
-          <NavigationProperty Name="Workstations" Relationship="Self.administrate" FromRole="Admin" ToRole="Workstation" />
-          <NavigationProperty Name="Users" Relationship="Self.operates" FromRole="Admin" ToRole="User" />
+          <NavigationProperty Name="Workstations" Relationship="Self.Administrate" FromRole="Admin" ToRole="Workstation" />
+          <NavigationProperty Name="Users" Relationship="Self.Operates" FromRole="Admin" ToRole="User" />
         </EntityType>
         <EntityType Name="Bill">
           <Key>
             <PropertyRef Name="BillId" />
           </Key>
           <Property Name="BillId" Type="Int32" Nullable="false" />
-          <Property Name="ValuteName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Amount" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="ValuteName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Amount" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
           <Property Name="File_FileId" Type="Int32" Nullable="false" />
           <Property Name="Wallet_WalletId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="File" Relationship="Self.Bill_File_FK" FromRole="Bill" ToRole="File" />
@@ -393,8 +402,8 @@
             <PropertyRef Name="CardId" />
           </Key>
           <Property Name="CardId" Type="Int32" Nullable="false" />
-          <Property Name="Amount" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="Type" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="Amount" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="Type" Type="String" MaxLength="1" FixedLength="true" Unicode="false" Nullable="false" />
           <Property Name="Wallet_WalletId" Type="Int32" />
           <NavigationProperty Name="Wallet" Relationship="Self.Card_Wallet_FK" FromRole="Card" ToRole="Wallet" />
         </EntityType>
@@ -403,11 +412,11 @@
             <PropertyRef Name="FileId" />
           </Key>
           <Property Name="FileId" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="UrlName" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
           <Property Name="Description" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
-          <Property Name="CreationDate" Type="DateTime" Precision="0" />
-          <Property Name="Folder_FolderId" Type="Int32" Nullable="false" />
+          <Property Name="CreationDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="0" />
           <Property Name="Workstation_WorkstationId" Type="Int32" Nullable="false" />
           <Property Name="FileType_TypeId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Bills" Relationship="Self.Bill_File_FK" FromRole="File" ToRole="Bill" />
@@ -419,7 +428,7 @@
             <PropertyRef Name="TypeId" />
           </Key>
           <Property Name="TypeId" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="Files" Relationship="Self.File_FileType_FK" FromRole="FileType" ToRole="File" />
         </EntityType>
         <EntityType Name="Regular">
@@ -436,20 +445,20 @@
             <PropertyRef Name="UserId" />
           </Key>
           <Property Name="UserId" Type="Int32" Nullable="false" />
-          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Lastname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Lastname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="Admin" Relationship="Self.Admin_User_FK" FromRole="User" ToRole="Admin" />
           <NavigationProperty Name="Regular" Relationship="Self.Regular_User_FK" FromRole="User" ToRole="Regular" />
-          <NavigationProperty Name="Admins" Relationship="Self.operates" FromRole="User" ToRole="Admin" />
+          <NavigationProperty Name="Admins" Relationship="Self.Operates" FromRole="User" ToRole="Admin" />
         </EntityType>
         <EntityType Name="Valute">
           <Key>
             <PropertyRef Name="ValuteId" />
           </Key>
           <Property Name="ValuteId" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Admin_UserId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Admin" Relationship="Self.Valute_Admin_FK" FromRole="Valute" ToRole="Admin" />
           <NavigationProperty Name="Wallets" Relationship="Self.Wallet_Valute_FK" FromRole="Valute" ToRole="Wallet" />
@@ -459,7 +468,7 @@
             <PropertyRef Name="WalletId" />
           </Key>
           <Property Name="WalletId" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Regular_UserId" Type="Int32" Nullable="false" />
           <Property Name="Valute_ValuteId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Bills" Relationship="Self.Bill_Wallet_FK" FromRole="Wallet" ToRole="Bill" />
@@ -473,11 +482,11 @@
           </Key>
           <Property Name="WorkstationId" Type="Int32" Nullable="false" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="CreationDate" Type="DateTime" Precision="0" Nullable="false" />
+          <Property Name="CreationDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="Regular_UserId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Files" Relationship="Self.File_Workstation_FK" FromRole="Workstation" ToRole="File" />
           <NavigationProperty Name="Regular" Relationship="Self.Workstation_Regular_FK" FromRole="Workstation" ToRole="Regular" />
-          <NavigationProperty Name="Admins" Relationship="Self.administrate" FromRole="Workstation" ToRole="Admin" />
+          <NavigationProperty Name="Admins" Relationship="Self.Administrate" FromRole="Workstation" ToRole="Admin" />
         </EntityType>
         <Association Name="Admin_User_FK">
           <End Role="User" Type="Self.User" Multiplicity="1" />
@@ -552,7 +561,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="File_Workstation_FK">
-          <End Role="Workstation" Type="Self.Workstation" Multiplicity="1" />
+          <End Role="Workstation" Type="Self.Workstation" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="File" Type="Self.File" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Workstation">
@@ -611,11 +622,11 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="administrate">
+        <Association Name="Administrate">
           <End Role="Admin" Type="Self.Admin" Multiplicity="*" />
           <End Role="Workstation" Type="Self.Workstation" Multiplicity="*" />
         </Association>
-        <Association Name="operates">
+        <Association Name="Operates">
           <End Role="Admin" Type="Self.Admin" Multiplicity="*" />
           <End Role="User" Type="Self.User" Multiplicity="*" />
         </Association>
@@ -674,30 +685,42 @@
             <End Role="Valute" EntitySet="Valutes" />
             <End Role="Wallet" EntitySet="Wallets" />
           </AssociationSet>
-          <AssociationSet Name="administrate" Association="Self.administrate">
+          <AssociationSet Name="Administrate" Association="Self.Administrate">
             <End Role="Admin" EntitySet="Admins" />
             <End Role="Workstation" EntitySet="Workstations" />
           </AssociationSet>
-          <AssociationSet Name="operates" Association="Self.operates">
+          <AssociationSet Name="Operates" Association="Self.Operates">
             <End Role="Admin" EntitySet="Admins" />
             <End Role="User" EntitySet="Users" />
           </AssociationSet>
+          <FunctionImport Name="sp_GetFilesForWorkstation" ReturnType="Collection(MoneyDB.sp_GetFilesForWorkstation_Result)">
+            <Parameter Name="WorkstationId" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
+        <ComplexType Name="sp_GetFilesForWorkstation_Result">
+          <Property Type="Int32" Name="FileId" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Extension" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="UrlName" Nullable="true" MaxLength="2000" />
+          <Property Type="String" Name="Description" Nullable="true" MaxLength="2000" />
+          <Property Type="DateTime" Name="CreationDate" Nullable="false" />
+          <Property Type="String" Name="FileTypeName" Nullable="false" MaxLength="50" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="MoneyDBModelStoreContainer" CdmEntityContainer="MoneyDBEntities">
+        <EntityContainerMapping StorageEntityContainer="MoneyDBStoreContainer" CdmEntityContainer="MoneyDBEntities">
           <EntitySetMapping Name="Admins">
-            <EntityTypeMapping TypeName="MoneyDBModel.Admin">
+            <EntityTypeMapping TypeName="MoneyDB.Admin">
               <MappingFragment StoreEntitySet="Admin">
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Bills">
-            <EntityTypeMapping TypeName="MoneyDBModel.Bill">
+            <EntityTypeMapping TypeName="MoneyDB.Bill">
               <MappingFragment StoreEntitySet="Bill">
                 <ScalarProperty Name="BillId" ColumnName="BillId" />
                 <ScalarProperty Name="ValuteName" ColumnName="ValuteName" />
@@ -708,7 +731,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Cards">
-            <EntityTypeMapping TypeName="MoneyDBModel.Card">
+            <EntityTypeMapping TypeName="MoneyDB.Card">
               <MappingFragment StoreEntitySet="Card">
                 <ScalarProperty Name="CardId" ColumnName="CardId" />
                 <ScalarProperty Name="Amount" ColumnName="Amount" />
@@ -718,21 +741,21 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Files">
-            <EntityTypeMapping TypeName="MoneyDBModel.File">
+            <EntityTypeMapping TypeName="MoneyDB.File">
               <MappingFragment StoreEntitySet="File">
                 <ScalarProperty Name="FileId" ColumnName="FileId" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="UrlName" ColumnName="UrlName" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
-                <ScalarProperty Name="Folder_FolderId" ColumnName="Folder_FolderId" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
                 <ScalarProperty Name="Workstation_WorkstationId" ColumnName="Workstation_WorkstationId" />
                 <ScalarProperty Name="FileType_TypeId" ColumnName="FileType_TypeId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="FileTypes">
-            <EntityTypeMapping TypeName="MoneyDBModel.FileType">
+            <EntityTypeMapping TypeName="MoneyDB.FileType">
               <MappingFragment StoreEntitySet="FileType">
                 <ScalarProperty Name="TypeId" ColumnName="TypeId" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -740,14 +763,14 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Regulars">
-            <EntityTypeMapping TypeName="MoneyDBModel.Regular">
+            <EntityTypeMapping TypeName="MoneyDB.Regular">
               <MappingFragment StoreEntitySet="Regular">
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Users">
-            <EntityTypeMapping TypeName="MoneyDBModel.User">
+            <EntityTypeMapping TypeName="MoneyDB.User">
               <MappingFragment StoreEntitySet="User">
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
@@ -758,7 +781,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Valutes">
-            <EntityTypeMapping TypeName="MoneyDBModel.Valute">
+            <EntityTypeMapping TypeName="MoneyDB.Valute">
               <MappingFragment StoreEntitySet="Valute">
                 <ScalarProperty Name="ValuteId" ColumnName="ValuteId" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -767,7 +790,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Wallets">
-            <EntityTypeMapping TypeName="MoneyDBModel.Wallet">
+            <EntityTypeMapping TypeName="MoneyDB.Wallet">
               <MappingFragment StoreEntitySet="Wallet">
                 <ScalarProperty Name="WalletId" ColumnName="WalletId" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -777,7 +800,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Workstations">
-            <EntityTypeMapping TypeName="MoneyDBModel.Workstation">
+            <EntityTypeMapping TypeName="MoneyDB.Workstation">
               <MappingFragment StoreEntitySet="Workstation">
                 <ScalarProperty Name="WorkstationId" ColumnName="WorkstationId" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -786,7 +809,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="administrate" TypeName="MoneyDBModel.administrate" StoreEntitySet="administrate">
+          <AssociationSetMapping Name="Administrate" TypeName="MoneyDB.Administrate" StoreEntitySet="Administrate">
             <EndProperty Name="Admin">
               <ScalarProperty Name="UserId" ColumnName="Admin_UserId" />
             </EndProperty>
@@ -794,7 +817,7 @@
               <ScalarProperty Name="WorkstationId" ColumnName="Workstation_WorkstationId" />
             </EndProperty>
           </AssociationSetMapping>
-          <AssociationSetMapping Name="operates" TypeName="MoneyDBModel.operates" StoreEntitySet="operates">
+          <AssociationSetMapping Name="Operates" TypeName="MoneyDB.Operates" StoreEntitySet="Operates">
             <EndProperty Name="Admin">
               <ScalarProperty Name="UserId" ColumnName="Admin_UserId" />
             </EndProperty>
@@ -802,6 +825,19 @@
               <ScalarProperty Name="UserId" ColumnName="User_UserId" />
             </EndProperty>
           </AssociationSetMapping>
+          <FunctionImportMapping FunctionImportName="sp_GetFilesForWorkstation" FunctionName="MoneyDB.Store.sp_GetFilesForWorkstation">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MoneyDB.sp_GetFilesForWorkstation_Result">
+                <ScalarProperty Name="FileId" ColumnName="FileId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Extension" ColumnName="Extension" />
+                <ScalarProperty Name="UrlName" ColumnName="UrlName" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
+                <ScalarProperty Name="FileTypeName" ColumnName="FileTypeName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
